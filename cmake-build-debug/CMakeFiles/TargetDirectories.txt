@@ -1,0 +1,3 @@
+C:/Users/Glasiem/CLionProjects/OS_Lab1/cmake-build-debug/CMakeFiles/OS_Lab1.dir
+C:/Users/Glasiem/CLionProjects/OS_Lab1/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Glasiem/CLionProjects/OS_Lab1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
