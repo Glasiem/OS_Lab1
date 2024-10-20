@@ -100,7 +100,6 @@ int main() {
         fprintf(stderr, "WSAStartup failed with error: %d\n", WSAGetLastError());
         return EXIT_FAILURE;
     }
-
     unsigned long long server_socket = create_server_socket();
     struct sockaddr_in server_addr;
     prepare_server_address(&server_addr);
@@ -132,9 +131,6 @@ int main() {
             if (client_socket > 0) {
                 char* buffer = (char*)malloc(BUFFER_SIZE);
                 while (1) {
-                    if (NON_BLOCKING){
-                        Sleep(1);
-                    }
                     long n = recv(client_socket, buffer, BUFFER_SIZE, 0);
                     if (n > 0) {
                         total_bytes += n;
@@ -145,12 +141,25 @@ int main() {
                         if (NON_BLOCKING) {
                             break;
                         }
-                    } else if (n == 0 || (n == -1 && errno != EWOULDBLOCK && errno != EAGAIN)) {
+                    } else if (n == 0) {
                         printf("Client %llu disconnected\n", client_socket);
                         closesocket(client_socket);
                         client_sockets[i] = 0;
                         print_stats();
                         break;
+                    }
+                    else {
+                        int err_code = WSAGetLastError();
+                        if (err_code == WSAEWOULDBLOCK) {
+                            break;
+                        }
+                        else {
+                            printf("recv failed with error: %d\n", err_code);
+                            closesocket(client_socket);
+                            client_sockets[i] = 0;
+                            print_stats();
+                            break;
+                        }
                     }
                 }
 
